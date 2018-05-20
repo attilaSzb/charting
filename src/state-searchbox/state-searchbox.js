@@ -10,8 +10,7 @@
 
 import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
 import {fromEvent} from 'rxjs';
-import {map, filter} from 'rxjs/operators';
-import {Services} from "../services.js"
+import {map} from 'rxjs/operators';
 import '../shared-styles.js';
 
 class StateSearchBox extends PolymerElement {
@@ -22,21 +21,14 @@ class StateSearchBox extends PolymerElement {
   ready() {
     super.ready();
 
-    // get states data
-    (new Services().request('data/states.json')).then((data) => {
-      this.loading = false;
-      this.stateData = Object.keys(data).map((key) => { return { code: key, name: data[key]}});
-    });
-
     // listen to search
     fromEvent(this.$.searchInput, 'keyup')
         .pipe(map(event => this.$.searchInput.$.input.value))
-        .pipe(filter(val => val.length > 0))
         .subscribe(val => {
           if(val) {
-            this.filteredStatesView = this.stateData.filter((state) => state.name.toLowerCase().indexOf(val.toLowerCase()) === 0);
-            this.filteredStates = this.filteredStatesView.map(item => item.code);
-            console.log(this.filteredStates);
+            this.filteredStates = this.allStates
+              .filter((state) => state.name.toLowerCase().indexOf(val.toLowerCase()) === 0)
+              .map(item => item.name);
           } else {
             this.filteredStates = [];
           }
@@ -70,7 +62,7 @@ class StateSearchBox extends PolymerElement {
         notify: true
       },
 
-      filteredStatesView: {
+      allStates: {
         type: Array
       }
     };

@@ -83,25 +83,23 @@ class MyApp extends PolymerElement {
 
       <app-drawer-layout fullbleed="" narrow="{{narrow}}">
         <!-- Drawer content -->
-        <app-drawer id="drawer" slot="drawer" swipe-open="[[narrow]]">
-          <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-            <a name="dashboard" href="[[rootPath]]dashboard">Dashboard</a>
-            <a name="my-polymer" href="[[rootPath]]my-polymer">Polymer</a>
-          </iron-selector>
-        </app-drawer>
+        <!--<app-drawer id="drawer" slot="drawer" swipe-open="[[narrow]]">-->
+          <!--<iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">-->
+            <!--<a name="dashboard" href="[[rootPath]]dashboard">Dashboard</a>-->
+            <!--<a name="my-polymer" href="[[rootPath]]my-polymer">Polymer</a>-->
+          <!--</iron-selector>-->
+        <!--</app-drawer>-->
 
         <!-- Main content -->
         <app-header-layout has-scrolling-region="">
           <app-header slot="header" condenses="" reveals="" effects="waterfall">
             <app-toolbar>
-              <paper-icon-button icon="my-icons:menu" drawer-toggle=""></paper-icon-button>
               <div main-title="">US Demography dashboard</div>
             </app-toolbar>
           </app-header>
 
           <iron-pages selected="[[page]]" attr-for-selected="name" role="main">
             <my-dashboard name="dashboard"></my-dashboard>
-            <my-polymer name="my-polymer"></my-polymer>
             <not-found name="404"></not-found>
           </iron-pages>
         </app-header-layout>
@@ -134,16 +132,16 @@ class MyApp extends PolymerElement {
      // Show 'view1' in that case. And if the page doesn't exist, show 'view404'.
     if (!page) {
       this.page = 'dashboard';
-    } else if (['dashboard','my-polymer'].indexOf(page) !== -1) {
+    } else if (['dashboard'].indexOf(page) !== -1) {
       this.page = page;
     } else {
       this.page = '404';
     }
 
     // Close a non-persistent drawer when the page & route are changed.
-    if (!this.$.drawer.persistent) {
-      this.$.drawer.close();
-    }
+    // if (!this.$.drawer.persistent) {
+    //   this.$.drawer.close();
+    // }
   }
 
   _pageChanged(page) {

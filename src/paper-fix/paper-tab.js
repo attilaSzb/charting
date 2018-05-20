@@ -62,7 +62,8 @@ Polymer({
         overflow: hidden;
         cursor: pointer;
         vertical-align: middle;
-
+        background: red;
+        color: white;  
         @apply --paper-font-common-base;
         @apply --paper-tab;
       }
@@ -88,7 +89,8 @@ Polymer({
 
       :host(:not(.iron-selected)) > .tab-content {
         opacity: 0.8;
-
+        background: white;
+        color: #757575;
         @apply --paper-tab-content-unselected;
       }
 

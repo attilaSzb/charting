@@ -10,12 +10,16 @@ export class Services {
   _jsonToChartData(data) {
     const keys =  Object.keys(data[0]);
 
-    return [keys].concat(data.map(item => {
+    const parseData = data.map(item => {
       let values = [];
 
       keys.forEach((key) => values.push(item[key]));
       return values;
-    }));
+    });
+
+    keys[0] = 'State';
+
+    return [keys].concat(parseData);
   }
 
   request(path, parse = false) {

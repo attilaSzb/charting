@@ -11,13 +11,23 @@
 import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
 import './shared-styles.js';
 import './state-searchbox/state-searchbox.js';
-import './charts/demography-chart.js';
-import './charts/workforce-chart.js';
+import './chart/chart.js';
+import {Services} from "./services.js";
 
 class Dashboard extends PolymerElement {
-  ready(){
-    super.ready()
+  ready() {
+    super.ready();
     this.selected = 0;
+
+    (new Services().request('data/states.json')).then((data) => {
+      this.allStates = Object.keys(data).map((key) => {
+        return { code: key, name: data[key] }
+      });
+    });
+  }
+
+  setSelected(event) {
+    console.log(event)
   }
 
   static get template() {
@@ -25,30 +35,30 @@ class Dashboard extends PolymerElement {
       <style include="shared-styles">
         :host {
           display: block;
-
           padding: 10px;
         }
       </style>
-
-      <h1>Dashboard</h1>
-      <div class="card">
-          <h2>Filter by state</h2>
-          <state-searchbox filtered-states="{{filteredStatesList}}"></state-searchbox>
-      </div>   
-        
       <div class="card">  
+        <state-searchbox all-states="[[allStates]]" filtered-states="{{filteredStates}}"></state-searchbox>
         <paper-tabs selected="{{selected}}">
-          <paper-tab link>
-            <a href="#link1" class="link" tabindex="-1">Demography</a>
-          </paper-tab>
-          <paper-tab link>
-            <a href="#link2" class="link" tabindex="-1">Workforce</a>
-          </paper-tab>
-        </paper-tabs>
-  
-        <iron-pages selected="{{selected}}" role="main">
-          <demography-chart filtered-states="[[filteredStatesList]]"></demography-chart>
-          <workforce-chart filtered-states="[[filteredStatesList]]"></workforce-chart>
+          <paper-tab>Age Demography</paper-tab>
+          <paper-tab>Workforce distribution</paper-tab>
+        </paper-tabs>   
+        <iron-pages selected="{{selected}}">
+          <us-chart 
+            x-label="Population"
+            active="{{!selected}}" 
+            data-src="data/population.csv"
+            all-states="[[allStates]]"
+            filtered-states="[[filteredStates]]">
+          </us-chart>
+          <us-chart 
+            x-label="Ocupational percentage"
+            active="{{selected}}"
+            data-src="data/jobs.json"
+            all-states="[[allStates]]"
+            filtered-states="[[filteredStates]]">
+          </us-chart>
         </iron-pages> 
       </div>
     `;
@@ -56,8 +66,17 @@ class Dashboard extends PolymerElement {
 
   static get properties() {
     return {
-      filteredStatesList: {
+      filteredStates: {
         type: Array
+      },
+
+      allStates: {
+        type: Array,
+        value: []
+      },
+
+      selected: {
+        type:Boolean
       }
     };
   }
